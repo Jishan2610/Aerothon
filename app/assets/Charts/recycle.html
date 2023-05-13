@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.7.0/d3.min.js"></script>
+    <title>Document</title>
+    <style>
+      body {
+        height: 95vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgb(28, 28, 87);
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="myChart" style="width: 100%; max-width: 1000px"></canvas>
+
+    <script>
+      d3.csv("aircraft_parts_data.csv").then(makeChart);
+
+      var xValues = [];
+      var yValues = [];
+      var barColors = ["#F03B3B", "#C84DD5", "#1CCBA3"];
+
+      function makeChart(parts) {
+        var PartsName = parts
+          .map(function (d) {
+            return d["Part Name"];
+          })
+          .slice(0, 1);
+        var material_composition = parts
+          .map(function (d) {
+            return d["Material Composition"];
+          })
+          .slice(0, 1);
+        for (var i = 0; i < 1; i++) {
+          PartsName[i] =
+            PartsName[i] +
+            `(Material Composition :- ${material_composition[i]})`;
+        }
+        var partsName = PartsName[0];
+        var age = parts
+          .map(function (d) {
+            return d["Age (years)"];
+          })
+          .slice(0, 1);
+        var condition = parts
+          .map(function (d) {
+            return d["Condition"];
+          })
+          .slice(0, 1);
+        var RecyclingRate = parts
+          .map(function (d) {
+            return d["Recycling Rate (%)"];
+          })
+          .slice(0, 1);
+        
+        var lifeCycle = parts
+          .map(function (d) {
+            return d["Life Cycle Assessment"];
+          })
+          .slice(0, 1);
+        
+
+        xValues = ["Age", "Recycling Rate (%)", "Life Cycle Assessment"];
+        yValues = [age[0], RecyclingRate[0], lifeCycle[0]];
+        Chart.defaults.global.defaultFontColor = "#fff";
+        new Chart("myChart", {
+          type: "pie",
+          data: {
+            labels: xValues,
+            datasets: [
+              {
+                backgroundColor: barColors,
+                data: yValues,
+              },
+            ],
+          },
+          options: {
+              title: {
+                display: true,
+                text: "Different Aspects Of Used[Condition] Aircraft Parts",
+              },
+          },
+        });
+      }
+    </script>
+  </body>
+</html>

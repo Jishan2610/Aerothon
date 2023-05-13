@@ -1,0 +1,3 @@
+class AircraftPart < ApplicationRecord
+  
+end

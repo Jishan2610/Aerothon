@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.7.0/d3.min.js"></script>
+    <!-- https://cdnjs.cloudflare.com/ajax/libs/d3/5.7.0/d3.min.js -->
+
+    <title>Document</title>
+    <style>
+    
+      #grid-container {
+        display: grid;
+        height: 75vh;
+        width: 75vw;
+        grid-template-columns:auto auto;
+        align-items: center;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <main id="grid-container">
+      <div id="grid-element-1">
+        <canvas
+          id="efficiencyChart"
+          style="width: 100%; max-width: 550px"
+        ></canvas>
+      </div>
+      <div id="grid-element-2">
+        <!-- style="width:100%;max-width:700px" -->
+        <canvas
+          id="carbonCharts"
+          style="width: 100%; max-width: 550px"
+        ></canvas>
+      </div>
+      <div id="grid-element-3">
+        <canvas id="waterChart" style="width: 100%; max-width: 550px"></canvas>
+      </div>
+      <div id="grid-element-4">
+        <canvas
+          id="landfillChart"
+          style="width: 100%; max-width: 550px"
+        ></canvas>
+      </div>
+    </main>
+    <script src="efficiencyCharts.js"></script>
+    <script src="carbonUsageCharts.js"></script>
+    <script src="waterWasteCharts.js"></script>
+    <script src="landfillWasteCharts.js"></script>
+  </body>
+</html>

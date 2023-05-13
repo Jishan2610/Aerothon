@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <link rel="stylesheet" href="style4.css" type="text/css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.7.0/d3.min.js"></script>
+    <style>
+      #grid-container {
+        display: grid;
+        height: 75vh;
+        width: 75vw;
+        grid-template-columns: auto auto;
+        align-items: center;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="mySidenav" class="sidenav">
+      <p class="logo"><span>Te</span>-SoftSolvers</p>
+      <a href="dashboard.html" class="icon-a"
+        ><i class="fa fa-dashboard icons"></i> &nbsp;&nbsp;Dashboard</a
+      >
+      <a href="user.html" class="icon-a"
+        ><i class="fa fa-users icons"></i> &nbsp;&nbsp;Users</a
+      >
+    </div>
+    <div id="main">
+      <div class="head">
+        <div class="col-div-6">
+          <span
+            style="font-size: 30px; cursor: pointer; color: white"
+            class="nav"
+            >&#9776; Dashboard</span
+          >
+          <span
+            style="font-size: 30px; cursor: pointer; color: white"
+            class="nav2"
+            >&#9776; Dashboard</span
+          >
+        </div>
+
+        <div class="col-div-6">
+          <div class="profile">
+            <img src="a1.jpg" class="pro-img" />
+            <a href="admin.html" style="float: right">Admin</a>
+          </div>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+
+      <div class="clearfix"></div>
+      <br />
+
+      <div class="col-div-3">
+        <div class="box">
+          <p>100<br /><span>Users</span></p>
+        </div>
+      </div>
+      <div class="col-div-3">
+        <div class="box">
+          <p>3<br /><span>Games</span></p>
+        </div>
+      </div>
+      <div class="col-div-3">
+        <div class="box">
+          <p>99%<br /><span>Accuracy</span></p>
+        </div>
+      </div>
+      <div class="col-div-3">
+        <div class="box">
+          <p>3<br /><span>Soft Skills</span></p>
+        </div>
+      </div>
+      <div class="clearfix"></div>
+      <br /><br />
+      <div class="col-div-8">
+        <div class="box-8">
+          <div class="content-box">
+            <p>Leaderbord <span>Sell All</span></p>
+            <br />
+            <div id="games-box">
+              <table>
+                <tr>
+                  <th>Games</th>
+                  <th>User Name</th>
+                  <th>Accuracy</th>
+                </tr>
+                <tr>
+                  <td>Verbal</td>
+                  <td>Sanika</td>
+                  <td>89%</td>
+                </tr>
+                <tr>
+                  <td>Differentiator</td>
+                  <td>Supratik</td>
+                  <td>98%</td>
+                </tr>
+                <tr>
+                  <td>Problem solving</td>
+                  <td>Loka</td>
+                  <td>20%</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-div-4">
+        <div class="box-4">
+          <div class="content-box">
+            <p>Average Total Scores <span>Sell All</span></p>
+
+            <div class="circle-wrap">
+              <div class="circle">
+                <div class="mask full">
+                  <div class="fill"></div>
+                </div>
+                <div class="mask half">
+                  <div class="fill"></div>
+                </div>
+                <div class="inside-circle">70%</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="clearfix"></div>
+    </div>
+
+    <!-- Added the Charts -->
+    <main id="grid-container">
+      <div id="grid-element-1">
+        <canvas
+          id="efficiencyChart"
+          style="width: 100%; max-width: 550px"
+        ></canvas>
+      </div>
+      <div id="grid-element-2">
+        <!-- style="width:100%;max-width:700px" -->
+        <canvas
+          id="carbonCharts"
+          style="width: 100%; max-width: 550px"
+        ></canvas>
+      </div>
+      <div id="grid-element-3">
+        <canvas id="waterChart" style="width: 100%; max-width: 550px"></canvas>
+      </div>
+      <div id="grid-element-4">
+        <canvas
+          id="landfillChart"
+          style="width: 100%; max-width: 550px"
+        ></canvas>
+      </div>
+    </main>
+    <script>
+      d3.csv("./aaa/aircraft_parts_data.csv").then(makeChart);
+
+      var xValues = [];
+      var yValues = [];
+      var barColors = [
+        "#F03B3B",
+        "#C84DD5",
+        "#1CCBA3",
+        "#18983E",
+        "#2281D4",
+        "#1F18EE",
+        "#C3EE18",
+        "#EE6D18",
+        "#EE1818",
+        "#FFCCFF",
+      ];
+
+      function makeChart(parts) {
+        console.log(parts);
+        var PartsName = parts
+          .map(function (d) {
+            return d["Part Name"];
+          })
+          .slice(0, 10);
+        var material_composition = parts
+          .map(function (d) {
+            return d["Material Composition"];
+          })
+          .slice(0, 10);
+        for (var i = 0; i < 10; i++) {
+          PartsName[i] =
+            PartsName[i] +
+            `(Material Composition :- ${material_composition[i]})`;
+        }
+        var Energy_Consumption_Saved = parts
+          .map(function (d) {
+            return d["Energy Consumption Saved (kWh)"];
+          })
+          .slice(0, 10);
+        var Energy_Consumption_For_New_Parts = parts
+          .map(function (d) {
+            return d["Energy Consumption - New Parts (kWh)"];
+          })
+          .slice(0, 10);
+        xValues = PartsName;
+        for (var i = 0; i < 10; i++) {
+          yValues[i] =
+            (Energy_Consumption_Saved[i] /
+              Energy_Consumption_For_New_Parts[i]) *
+            100;
+        }
+        //   console.log(yValues);
+        new Chart(document.getElementById("efficiencyChart"), {
+          type: "horizontalBar",
+          data: {
+            labels: xValues,
+            datasets: [
+              {
+                backgroundColor: barColors,
+                data: yValues,
+              },
+            ],
+          },
+          options: {
+            // responsive: false,
+            //               maintainAspectRatio: false,
+            title: {
+              display: true,
+              text: "Efficiency Increament Of Some AirCraft Parts",
+              position: "bottom",
+              align: "center",
+            },
+            legend: { display: false },
+            scales: {
+              xAxes: [{ ticks: { min: 6, max: 100 } }],
+              //   {ticks: {min: 40, max:160}}
+              yAxes: [{ ticks: { min: 40, max: 160 } }],
+            },
+          },
+        });
+      }
+    </script>
+    <script>
+      d3.csv("aircraft_parts_data.csv").then(makeChart);
+
+      var xValues = [];
+      var yValues = [];
+      var barColors = [
+        "#F03B3B",
+        "#C84DD5",
+        "#1CCBA3",
+        "#18983E",
+        "#2281D4",
+        "#1F18EE",
+        "#C3EE18",
+        "#EE6D18",
+        "#EE1818",
+        "#FFCCFF",
+      ];
+
+      function makeChart(parts) {
+        console.log(parts);
+        var PartsName = parts
+          .map(function (d) {
+            return d["Part Name"];
+          })
+          .slice(0, 10);
+        var material_composition = parts
+          .map(function (d) {
+            return d["Material Composition"];
+          })
+          .slice(0, 10);
+        for (var i = 0; i < 10; i++) {
+          PartsName[i] =
+            PartsName[i] +
+            `(Material Composition :- ${material_composition[i]})`;
+        }
+        var Carbon_Consumption_Saved = parts
+          .map(function (d) {
+            return d["Carbon Footprint Saved (kg CO2e)"];
+          })
+          .slice(0, 10);
+        console.log(Carbon_Consumption_Saved);
+        var Carbon_Consumption_For_New_Parts = parts
+          .map(function (d) {
+            return d["New Parts Carbon Footprint (kg CO2e)"];
+          })
+          .slice(0, 10);
+        xValues = PartsName;
+        for (var i = 0; i < 10; i++) {
+          yValues[i] =
+            (Carbon_Consumption_Saved[i] /
+              Carbon_Consumption_For_New_Parts[i]) *
+            100;
+        }
+        // console.log(yValues);
+        new Chart(document.getElementById("carbonCharts"), {
+          type: "horizontalBar",
+          data: {
+            labels: xValues,
+            datasets: [
+              {
+                backgroundColor: barColors,
+                data: yValues,
+              },
+            ],
+          },
+          options: {
+            // responsive: false,
+            //               maintainAspectRatio: false,
+            title: {
+              display: true,
+              text: "% Reduce in Consumption Of Carbon Of Some AirCraft Parts",
+              position: "bottom",
+              align: "center",
+            },
+            legend: { display: false },
+            scales: {
+              xAxes: [{ ticks: { min: 6, max: 100 } }],
+              //   {ticks: {min: 40, max:160}}
+              yAxes: [{ ticks: { min: 40, max: 160 } }],
+            },
+          },
+        });
+      }
+    </script>
+    <script>
+      d3.csv("aircraft_parts_data.csv").then(makeChart);
+
+      var xValues = [];
+      var yValues = [];
+      var barColors = [
+        "#F03B3B",
+        "#C84DD5",
+        "#1CCBA3",
+        "#18983E",
+        "#2281D4",
+        "#1F18EE",
+        "#C3EE18",
+        "#EE6D18",
+        "#EE1818",
+        "#FFCCFF",
+      ];
+
+      function makeChart(parts) {
+        console.log(parts);
+        var PartsName = parts
+          .map(function (d) {
+            return d["Part Name"];
+          })
+          .slice(0, 10);
+        var material_composition = parts
+          .map(function (d) {
+            return d["Material Composition"];
+          })
+          .slice(0, 10);
+        for (var i = 0; i < 10; i++) {
+          PartsName[i] =
+            PartsName[i] +
+            `(Material Composition :- ${material_composition[i]})`;
+        }
+        var Water_Consumption_Saved = parts
+          .map(function (d) {
+            return d["Water Usage Saved (liters)"];
+          })
+          .slice(0, 10);
+        var Water_Consumption_For_New_Parts = parts
+          .map(function (d) {
+            return d["Water Usage - New Parts (liters)"];
+          })
+          .slice(0, 10);
+        xValues = PartsName;
+        for (var i = 0; i < 10; i++) {
+          yValues[i] =
+            (Water_Consumption_Saved[i] / Water_Consumption_For_New_Parts[i]) *
+            100;
+        }
+        //   console.log(yValues);
+        new Chart(document.getElementById("waterChart"), {
+          type: "horizontalBar",
+          data: {
+            labels: xValues,
+            datasets: [
+              {
+                backgroundColor: barColors,
+                data: yValues,
+              },
+            ],
+          },
+          options: {
+            // responsive: false,
+            //               maintainAspectRatio: false,
+            title: {
+              display: true,
+              text: "% Reduce in Wastage Of Water Of Some AirCraft Parts",
+              position: "bottom",
+              align: "center",
+            },
+            legend: { display: false },
+            scales: {
+              xAxes: [{ ticks: { min: 6, max: 100 } }],
+              //   {ticks: {min: 40, max:160}}
+              yAxes: [{ ticks: { min: 40, max: 160 } }],
+            },
+          },
+        });
+      }
+    </script>
+    <script>
+      d3.csv("aircraft_parts_data.csv").then(makeChart);
+
+      var xValues = [];
+      var yValues = [];
+      var barColors = [
+        "#F03B3B",
+        "#C84DD5",
+        "#1CCBA3",
+        "#18983E",
+        "#2281D4",
+        "#1F18EE",
+        "#C3EE18",
+        "#EE6D18",
+        "#EE1818",
+        "#FFCCFF",
+      ];
+
+      function makeChart(parts) {
+        console.log(parts);
+        var PartsName = parts
+          .map(function (d) {
+            return d["Part Name"];
+          })
+          .slice(0, 10);
+        var material_composition = parts
+          .map(function (d) {
+            return d["Material Composition"];
+          })
+          .slice(0, 10);
+        for (var i = 0; i < 10; i++) {
+          PartsName[i] =
+            PartsName[i] +
+            `(Material Composition :- ${material_composition[i]})`;
+        }
+        var Landfill_Consumption_Saved = parts
+          .map(function (d) {
+            return d["Landfill Waste Saved (kg)"];
+          })
+          .slice(0, 10);
+        var Landfill_Consumption_For_New_Parts = parts
+          .map(function (d) {
+            return d["Landfill Waste - New Parts (kg)"];
+          })
+          .slice(0, 10);
+        xValues = PartsName;
+        for (var i = 0; i < 10; i++) {
+          yValues[i] =
+            (Landfill_Consumption_Saved[i] /
+              Landfill_Consumption_For_New_Parts[i]) *
+            100;
+        }
+        //   console.log(yValues);
+        new Chart(document.getElementById("landfillChart"), {
+          type: "horizontalBar",
+          data: {
+            labels: xValues,
+            datasets: [
+              {
+                backgroundColor: barColors,
+                data: yValues,
+              },
+            ],
+          },
+          options: {
+            //   responsive: false,
+            //                 maintainAspectRatio: false,
+            title: {
+              display: true,
+              text: "% Reduce in Wastage Of Landfill Of Some AirCraft Parts",
+              position: "bottom",
+              align: "center",
+            },
+            legend: { display: false },
+            scales: {
+              xAxes: [{ ticks: { min: 6, max: 100 } }],
+              //   {ticks: {min: 40, max:160}}
+              yAxes: [{ ticks: { min: 40, max: 160 } }],
+            },
+          },
+        });
+      }
+    </script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+      $(".nav").click(function () {
+        $("#mySidenav").css("width", "70px");
+        $("#main").css("margin-left", "70px");
+        $(".logo").css("visibility", "hidden");
+        $(".logo span").css("visibility", "visible");
+        $(".logo span").css("margin-left", "-10px");
+        $(".icon-a").css("visibility", "hidden");
+        $(".icons").css("visibility", "visible");
+        $(".icons").css("margin-left", "-8px");
+        $(".nav").css("display", "none");
+        $(".nav2").css("display", "block");
+      });
+
+      $(".nav2").click(function () {
+        $("#mySidenav").css("width", "300px");
+        $("#main").css("margin-left", "300px");
+        $(".logo").css("visibility", "visible");
+        $(".icon-a").css("visibility", "visible");
+        $(".icons").css("visibility", "visible");
+        $(".nav").css("display", "block");
+        $(".nav2").css("display", "none");
+      });
+
+      const updateAllGames = () => {
+        const gamesBox = document.getElementById("games-box");
+        console.log("Games", gamesBox);
+        const games = JSON.parse(localStorage.getItem("allGames"));
+
+        // Games variable is an array of objects
+        // Each object has the following properties:
+        // gameName, accuracy, date
+
+        // Create a table with the following columns:
+        // Game Name, Accuracy, Date
+
+        // Create a row for each game
+        let newHtml = `
+          <table>
+            <tr>
+              <th>Game Name</th>
+              <th>Accuracy</th>
+              <th>Date</th>
+            </tr>
+        `;
+        games.forEach((game) => {
+          newHtml += `
+            <tr>
+              <td>${game.gameName}</td>
+              <td>${game.accuracy}</td>
+              <td>${game.date}</td>
+            </tr>
+          `;
+        });
+        newHtml += "</table>";
+
+        gamesBox.innerHTML = newHtml;
+      };
+
+      updateAllGames();
+    </script>
+     
+  </body>
+</html>
